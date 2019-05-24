@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SearchingCourses
@@ -10,8 +12,14 @@ namespace SearchingCourses
     {
         public static void Main()
         {
-            //var songLyrics = new SongLyrics("shakira", "Nada");
-            var profanityFinder = new ProfanityFinder ("no, kurwa!");
+            var songLyrics = new SongLyrics("Eminem", "Without me");
+            var profanityFinder = new ProfanityFinder ();
+
+            var vulgar = "programowanie jest w chuj fajne";
+            var censored = profanityFinder.Censore(songLyrics.lyrics);
+
+            Console.WriteLine(censored);
+
             Console.WriteLine("Done.");
             Console.ReadLine();
         }
@@ -19,11 +27,34 @@ namespace SearchingCourses
 
     internal class ProfanityFinder
     {
-       
+        private string[] badWords;
+        
 
-        public ProfanityFinder(string text)
+        public ProfanityFinder()
         {
-            var dictFile = File.ReadAllText(path:"profanities.txt")
+            var dictFile = File.ReadAllText(path: "profanities.txt");
+            dictFile = dictFile.Replace("*", "");
+            dictFile = dictFile.Replace("(", "");
+            dictFile = dictFile.Replace(")", "");
+
+            badWords = dictFile.Split(new[] { "\",\"" }, StringSplitOptions.None);
+
+        }
+
+        internal object Censore(string text)
+        {
+            foreach (var word in badWords)
+            {
+                text = RemoveBadWord(text, word);
+            }
+            return text;
+
+        }
+
+        static string RemoveBadWord(string text, string word)
+        {
+            var pattern = "\\b" +word+ "\\b";
+                return Regex.Replace(text, pattern, "____",RegexOptions.IgnoreCase);
         }
     }
 }

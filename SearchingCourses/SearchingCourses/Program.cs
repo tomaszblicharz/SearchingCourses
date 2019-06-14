@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SearchingCurses;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace SearchingCourses
     {
         public static void Main()
         {
-            var webcache = new webCache();
+            var strona = WebCache.GetOrDownload("http://google.com");
             var eminem = new Artist("Eminem");
             eminem.songTitles = new List<string>
             {
@@ -32,12 +33,7 @@ namespace SearchingCourses
         }
     }
 
-    internal class webCache
-    {
-        public webCache()
-        {
-        }
-    }
+
 }
         
     

@@ -24,22 +24,39 @@ namespace SearchingCurses {
         }
 
         static string GetFromCache(string url) {
-            var query = new SQLiteCommand($"select data from cache where url='{url}' limit 1", connection);
-            var reader = query.ExecuteReader();
+            var command = new SQLiteCommand($"select data from cache where url=? limit 1", connection);
+            command.Parameters.Add(new SQLiteParameter(DbType.String, "param1") {Value = url});
+            var reader = command.ExecuteReader();
             reader.Read();
             return reader["data"] as string;
         }
 
         static bool IsInCache(string url) {
-            var query = $"select * from cache where url='{url}' limit 1";
+            var query = $"select * from cache where url=? limit 1";
             var command = new SQLiteCommand(query, connection);
+            command.Parameters.Add(new SQLiteParameter(DbType.String, "param1") {Value = url});
+
             return command.ExecuteScalar() != null;
+        }
+        
+        static void SaveInCache(string url, string data) {
+            var sql = new SQLiteCommand(
+                "INSERT INTO cache (url, data) VALUES (?, ?)", connection);
+            sql.Parameters.Add(new SQLiteParameter(DbType.String, "param1") {Value = url});
+            sql.Parameters.Add(new SQLiteParameter(DbType.String, "param2") {Value = data});
+            sql.ExecuteNonQuery();
         }
 
         static string DownloadHTML(string url) {
             Console.WriteLine("Downloading: " + url);
-            var browser = new WebClient();
-            return browser.DownloadString(url);
+            try {
+                var browser = new WebClient();
+                return browser.DownloadString(url);
+            }
+            catch (WebException webException){
+                Console.WriteLine("Nie udało się pobrać: " + url);
+                return "{\"lyrics\":\"\"}";
+            }
         }
 
         static bool TableExists() {
@@ -58,15 +75,6 @@ namespace SearchingCurses {
             var query = "create table cache (url text, data text)";
             var command = new SQLiteCommand(query, connection);
             command.ExecuteNonQuery();
-        }
-
-        static void SaveInCache(string url, string data) {
-            var sql = new SQLiteCommand(
-                "INSERT INTO cache (url, data) VALUES (?, ?)", connection);
-            var parameterType = DbType.String;
-            sql.Parameters.Add(new SQLiteParameter(DbType.String, "param1") {Value = url});
-            sql.Parameters.Add(new SQLiteParameter(DbType.String, "param2") {Value = data});
-            sql.ExecuteNonQuery();
         }
     }
 }

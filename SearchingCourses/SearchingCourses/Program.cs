@@ -22,7 +22,20 @@ namespace SearchingCourses
             eminem.CalculateSwearAndWordCount();
             eminem.DisplayStatistics();
 
-           
+            var nickiMinaj = new Artist("Nicki Minaj");
+            nickiMinaj.songTitles = new List<string>
+            {
+                "Bang Bang",
+                "Super Bass",
+                "Anaconda",
+                "Starships",
+                "nie ma takiej"
+            };
+
+            nickiMinaj.CalculateSwearAndWordCount();
+            nickiMinaj.DisplayStatistics();
+
+
 
             var profanityFinder = new ProfanityFinder();
 

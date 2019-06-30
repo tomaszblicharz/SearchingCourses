@@ -1,4 +1,4 @@
-﻿using SearchingCurses;
+using SearchingCurses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,42 +11,32 @@ namespace SearchingCourses
     {
         public static void Main()
         {
-            var strona = WebCache.GetOrDownload("http://google.com");
-            var eminem = new Artist("Eminem");
-            eminem.songTitles = new List<string>
+            Console.Write("Podaj artystę: ");
+            var artist = Console.ReadLine();
+            Console.Write("Podaj 4 piosenki zatwierdzając kazdą enterem: " + "\n");
+            string[] titles = new string[4];
+            for (int i = 0; i < titles.Length; i++)
             {
-                "Lose Yourself",
-                "Not Afraid",
-                "Sing for the Moment"
-            };
-            eminem.CalculateSwearAndWordCount();
-            eminem.DisplayStatistics();
+                titles[i] = Console.ReadLine();
+            }
 
-            var nickiMinaj = new Artist("Nicki Minaj");
-            nickiMinaj.songTitles = new List<string>
+            var yourArtist = new Artist(artist);
+            yourArtist.songTitles = new List<string>
             {
-                "Bang Bang",
-                "Super Bass",
-                "Anaconda",
-                "Starships",
-                "nie ma takiej"
+                titles[0],
+                titles[1],
+                titles[2],
+                titles[3]
+
             };
-
-            nickiMinaj.CalculateSwearAndWordCount();
-            nickiMinaj.DisplayStatistics();
-
+            yourArtist.CalculateSwearAndWordCount();
+            yourArtist.DisplayStatistics();
 
 
-            var profanityFinder = new ProfanityFinder();
-
-          
-
-            Console.WriteLine("Done.");
+            Console.WriteLine("Gotowe.");
             Console.ReadLine();
         }
     }
-
-
 }
         
     
